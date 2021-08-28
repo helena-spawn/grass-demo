@@ -4,6 +4,6 @@ describe("Dummy test", () =>
     {
         let variable = 0;
 
-        expect(variable).toBe(0);
+        expect(variable).toBe(1);
     })
 });
