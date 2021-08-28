@@ -17072,14 +17072,135 @@ var require_p5_min = __commonJS({
 
 // src/main.ts
 var import_p5 = __toModule(require_p5_min());
+
+// src/grass.ts
+var Grass = class {
+  constructor(p5, bottom, top, strokeWidth, color) {
+    this.draw = () => {
+      this.update();
+      this.display();
+    };
+    this.display = () => {
+      this._p5.stroke(this._color);
+      this._p5.strokeWeight(this._strokeWidth);
+      this._p5.noFill();
+      this._p5.curve(this._curveStart.x, this._curveStart.y, this._bottom.x, this._bottom.y, this._top.x, this._top.y, this._curveEnd.x, this._curveEnd.y);
+    };
+    this.update = () => {
+      let wind = this._p5.createVector(0, 0);
+      wind.add(this._acceleration);
+      this.applyWind(wind);
+      this.applyBounds();
+      this.applyDrag();
+    };
+    this.applyWind = (wind) => {
+      this._top.add(wind);
+      this._curveEnd.add(wind.mult(this._curveEndMultiplier));
+    };
+    this.applyBounds = () => {
+      let distance = Math.abs(this._top.x - this._topBase.x);
+      let force = this._p5.createVector(1, 0).mult(distance / this._animationSpeed);
+      if (this._top.x > this._topBase.x) {
+        force.mult(-1);
+      }
+      this.applyForce(force);
+    };
+    this.animate = (x, y) => {
+      let force = this._p5.createVector(this._defaultWindForce, 0);
+      if (this._p5.mouseX > this._top.x) {
+        force.mult(-1);
+      }
+      this.applyForce(force);
+    };
+    this.applyForce = (force) => {
+      this._acceleration.add(force);
+    };
+    this.applyDrag = () => {
+      let drag = this._acceleration.copy();
+      let speedSquared = drag.magSq();
+      let constant = -0.01;
+      drag.normalize();
+      drag.mult(constant * speedSquared);
+      this.applyForce(drag);
+    };
+    this._color = color;
+    this._strokeWidth = strokeWidth;
+    this._p5 = p5;
+    this._maxXDelta = 200;
+    this._velocity = this._p5.createVector(0, 0);
+    this._acceleration = this._p5.createVector(0, 0);
+    this._bottom = bottom;
+    this._topBase = top;
+    this._top = this._topBase.copy();
+    this._curveStart = this._p5.createVector(bottom.x, bottom.y + 100);
+    this._curveEnd = this._p5.createVector(top.x, 0);
+    this._curveEndMultiplier = 5;
+    this._animationSpeed = 50;
+    this._defaultWindForce = 10;
+  }
+};
+
+// src/grassFactory.ts
+var GrassFactory = class {
+  constructor(P52, screenWidth, screenHeight) {
+    this.createShape = (x, y) => {
+      let bottom = this._p5.createVector(x, this._screenHeight);
+      let height = this.calculateHeight();
+      let top = this._p5.createVector(x, height);
+      let strokeWidth = this.calculateStrokeWidth(height);
+      let color = this.calculateColor(strokeWidth);
+      let grass = new Grass(this._p5, bottom, top, strokeWidth, color);
+      return grass;
+    };
+    this.calculateHeight = () => {
+      let min = 25;
+      let max = 75;
+      let percentage = Math.floor(Math.random() * (max - min + 1) + min) / 100;
+      console.log("Percentage " + percentage);
+      let height = percentage * this._screenHeight;
+      return height;
+    };
+    this.calculateStrokeWidth = (height) => {
+      return 0.01 * (this._screenHeight - height);
+    };
+    this.calculateColor = (strokeWidth) => {
+      let luminiscence = this.calculateLuminiscense(strokeWidth);
+      return "hsb(120, 40%, " + luminiscence + ")";
+    };
+    this.calculateLuminiscense = (strokeWith) => {
+      let min = 30;
+      let max = 50;
+      let percentage = Math.floor(Math.random() * (max - min + 1) + min);
+      return percentage + "%";
+    };
+    this._p5 = P52;
+    this._screenWidth = screenWidth;
+    this._screenHeight = screenHeight;
+  }
+};
+
+// src/main.ts
 var sketch = (p5) => {
-  const width = 600;
-  const height = 600;
+  const _width = 1024;
+  const _height = 768;
+  let _shapes = new Array();
+  let _factory = new GrassFactory(p5, _width, _height);
   p5.setup = () => {
-    p5.createCanvas(width, height);
+    p5.createCanvas(_width, _height);
+    p5.background("hsb(220, 50%, 70%)");
   };
   p5.draw = () => {
-    p5.background("black");
+    p5.background("hsb(220, 50%, 70%)");
+    _shapes.forEach((element) => {
+      element.draw();
+    });
+  };
+  p5.mousePressed = () => {
+    let shape = _factory.createShape(p5.mouseX, p5.mouseY);
+    _shapes.push(shape);
+    _shapes.forEach((element) => {
+      element.animate(p5.mouseX, p5.mouseY);
+    });
   };
 };
 var myp5 = new import_p5.default(sketch);
