@@ -4,55 +4,54 @@ import Grass from "./grass";
 export default class GrassFactory
 {
     _p5: p5;
-    _screenWidth: number;
-    _screenHeight: number;
+    _drawHeight: number;
+    _canvasHeight: number;
 
-    constructor(P5: p5, screenWidth: number, screenHeight: number)
+    constructor(P5: p5, drawHeight: number, canvasHeight: number)
     {
         this._p5 = P5;
-        this._screenWidth = screenWidth;
-        this._screenHeight = screenHeight;
+        this._drawHeight = drawHeight;
+        this._canvasHeight = canvasHeight;
     }
 
-    createShape = (x: number, y: number): Grass  =>
+    createShape = (x: number): Grass  =>
     {
-        let bottom: p5.Vector = this._p5.createVector(x, this._screenHeight);
-        let height = this.calculateHeight();
-        let top: p5.Vector = this._p5.createVector(x, height);
-        let strokeWidth = this.calculateStrokeWidth(height);
-        let color = this.calculateColor(strokeWidth);
-        let grass = new Grass(this._p5, bottom, top, strokeWidth, color); 
+        const bottom: p5.Vector = this._p5.createVector(x, this._drawHeight);
+        const height = this.calculateHeight();
+        const top: p5.Vector = this._p5.createVector(x, height);
+        const strokeWidth = this.calculateStrokeWidth(height);
+        const color = this.calculateColor();
+        const grass = new Grass(this._p5, bottom, top, strokeWidth, color, this._canvasHeight); 
         return grass;
-    }
+    };
 
     calculateHeight = (): number =>
     {
-        let min = 25; 
-        let max = 75;
-        let percentage = Math.floor(Math.random() * (max - min + 1) + min) / 100;
+        const min = 25; 
+        const max = 75;
+        const percentage = Math.floor(Math.random() * (max - min + 1) + min) / 100;
         console.log("Percentage " + percentage);
-        let height = percentage * this._screenHeight;
+        const height = percentage * this._drawHeight;
         return height;
-    }
+    };
 
     calculateStrokeWidth = (height: number): number =>
     {
-        return .01 * (this._screenHeight - height);
-    }
+        return .01 * (this._drawHeight - height);
+    };
 
-    calculateColor = (strokeWidth: number): string =>
+    calculateColor = (): string =>
     {
-        let luminiscence = this.calculateLuminiscense(strokeWidth);
+        const luminiscence = this.calculateLuminiscense();
         return "hsb(120, 40%, " + luminiscence + ")";
-    }
+    };
 
-    calculateLuminiscense = (strokeWith: number): string =>
+    calculateLuminiscense = (): string =>
     {
-        let min = 30; 
-        let max = 50;
-        let percentage = Math.floor(Math.random() * (max - min + 1) + min);
+        const min = 30; 
+        const max = 50;
+        const percentage = Math.floor(Math.random() * (max - min + 1) + min);
 
         return percentage + "%";
-        // return "35%";
-    }
+    };
 }

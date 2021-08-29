@@ -1,22 +1,22 @@
-module.exports =
-{
-    "env":
-    {
+module.exports = {
+    "env": {
         "browser": true,
-        "es6": true
+        "es2021": true,
+        "node": true
     },
-    "extends": "eslint:recommended",
-    "globals":
-    {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
     },
-    "parserOptions":
-    {
-        "ecmaVersion": 2018
-    },
-    "rules":
-    {
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
         "brace-style":
             [
                 "error",
@@ -27,21 +27,10 @@ module.exports =
                 "error",
                 "multi-line"
             ],
-        "object-curly-newline":
+        "semi":
             [
                 "error",
-                "always",
-                {
-                    "ObjectExpression": "always",
-                    "ObjectPattern":
-                    {
-                        "multiline": true
-                    },
-                    "ImportDeclaration": {
-                        "multiline": true, "minProperties": 4
-                    },
-                    "ExportDeclaration": "never"
-                }
+                "always"
             ]
     }
 };
