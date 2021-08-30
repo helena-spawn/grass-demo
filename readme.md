@@ -313,6 +313,6 @@ I got my p5.js typescript initial setup from [p5.js and typescript](https://code
 Note: that my setup is a little bit different because of the node setup.
 
 [Daniel Shiffman's physics engine on youtube](https://www.youtube.com/watch?v=wB1pcXtEwIs)
-[Daniel Shiffman](https://shiffman.net/)
+
 [Visual studio code p5.js extensions](https://marketplace.visualstudio.com/items?itemName=samplavigne.p5-vscode)
 
