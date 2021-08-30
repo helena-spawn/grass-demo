@@ -299,7 +299,7 @@ This is my first p5.js Sketch in typescript so I think that are a lot of improve
 The source code freely available on [GitHub](https://github.com/helena-spawn/grass-demo). Please use it and improve on it for whatever need you have.
 
 # Thanks
-Special thanks to Daniel Shiffman for his excellent and inspiring coding train tutorials. Super thanks to the entire Processing team sincerely wish I found your scene earlier in my life. But hey never too late to late. Processing is going to help an entire generation of artists and creative coders for years to come.
+Special thanks to Daniel Shiffman for his excellent and inspiring coding train tutorials. Super thanks to the entire Processing team, I sincerely wish I found your scene earlier in my life. But hey never too late to learn. Processing is going to help an entire generation of artists and creative coders for years to come.
 
 # Keywords
 p5.js processing intermediate typescript node npm
