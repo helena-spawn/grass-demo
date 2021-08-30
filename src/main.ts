@@ -7,7 +7,7 @@ const sketch = (p5: P5) =>
     const _canvasWidth = 1024;
     const _canvasHeight = 768;
     const _bottomMargin = 150;
-    const _debug = true;
+    const _debug = false;
 
     const _shapes = new Array<Grass>();
     const _drawHeight = _canvasHeight - _bottomMargin;

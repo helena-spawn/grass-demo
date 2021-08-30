@@ -17098,12 +17098,12 @@ var Grass = class {
     };
     this.applyWind = (wind) => {
       this._top.add(wind);
-      this._curveEnd.add(wind.mult(this._curveEndMultiplier));
+      this._curveEnd.add(wind.mult(this._forceMultiplier));
     };
     this.applyBounds = () => {
-      const distance = Math.abs(this._top.x - this._topBase.x);
+      const distance = Math.abs(this._top.x - this._initialtop.x);
       const force = this._p5.createVector(1, 0).mult(distance / this._animationDelay);
-      if (this._top.x > this._topBase.x) {
+      if (this._top.x > this._initialtop.x) {
         force.mult(-1);
       }
       this.applyForce(force);
@@ -17153,11 +17153,11 @@ var Grass = class {
     this._p5 = p5;
     this._acceleration = this._p5.createVector(0, 0);
     this._bottom = bottom;
-    this._topBase = top;
-    this._top = this._topBase.copy();
+    this._initialtop = top;
+    this._top = this._initialtop.copy();
     this._curveStart = this._p5.createVector(bottom.x, canvasHeight);
     this._curveEnd = this._p5.createVector(top.x, 0);
-    this._curveEndMultiplier = 5;
+    this._forceMultiplier = 5;
     this._animationDelay = 50;
     this._defaultWindForce = 10;
   }
@@ -17207,7 +17207,7 @@ var sketch = (p5) => {
   const _canvasWidth = 1024;
   const _canvasHeight = 768;
   const _bottomMargin = 150;
-  const _debug = true;
+  const _debug = false;
   const _shapes = new Array();
   const _drawHeight = _canvasHeight - _bottomMargin;
   const _factory = new GrassFactory(p5, _drawHeight, _canvasHeight);

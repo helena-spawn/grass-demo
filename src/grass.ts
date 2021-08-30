@@ -5,10 +5,10 @@ export default class Grass
     _p5: p5;
     _bottom: p5.Vector;
     _curveStart: p5.Vector;
-    _topBase: p5.Vector;
+    _initialtop: p5.Vector;
     _top: p5.Vector;
     _curveEnd: p5.Vector
-    _curveEndMultiplier: number;
+    _forceMultiplier: number;
     _acceleration: p5.Vector;
     _curve: p5.CURVE;
     _color: string;
@@ -23,11 +23,11 @@ export default class Grass
         this._p5 = p5;
         this._acceleration = this._p5.createVector(0, 0);
         this._bottom = bottom;
-        this._topBase = top;
-        this._top = this._topBase.copy();
+        this._initialtop = top;
+        this._top = this._initialtop.copy();
         this._curveStart = this._p5.createVector(bottom.x, canvasHeight);
         this._curveEnd = this._p5.createVector(top.x, 0);
-        this._curveEndMultiplier = 5;
+        this._forceMultiplier = 5;
         this._animationDelay = 50;
         this._defaultWindForce = 10;
     }
@@ -73,14 +73,14 @@ export default class Grass
     applyWind = (wind:p5.Vector): void =>
     {
         this._top.add(wind);
-        this._curveEnd.add(wind.mult(this._curveEndMultiplier));
+        this._curveEnd.add(wind.mult(this._forceMultiplier));
     };
 
     applyBounds = (): void =>
     {
-        const distance = Math.abs(this._top.x - this._topBase.x);
+        const distance = Math.abs(this._top.x - this._initialtop.x);
         const force: p5.Vector = this._p5.createVector(1, 0).mult(distance / this._animationDelay);
-        if (this._top.x > this._topBase.x)
+        if (this._top.x > this._initialtop.x)
         {
             force.mult(-1);
         }
