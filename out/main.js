@@ -17075,19 +17075,22 @@ var import_p5 = __toModule(require_p5_min());
 
 // src/grass.ts
 var Grass = class {
-  constructor(p5, bottom, top, strokeWidth, color) {
-    this.draw = () => {
+  constructor(p5, bottom, top, strokeWidth, color, canvasHeight) {
+    this.draw = (debug) => {
       this.update();
-      this.display();
+      this.display(debug);
     };
-    this.display = () => {
+    this.display = (debug) => {
       this._p5.stroke(this._color);
       this._p5.strokeWeight(this._strokeWidth);
       this._p5.noFill();
       this._p5.curve(this._curveStart.x, this._curveStart.y, this._bottom.x, this._bottom.y, this._top.x, this._top.y, this._curveEnd.x, this._curveEnd.y);
+      if (debug) {
+        this.displayDebugInfo();
+      }
     };
     this.update = () => {
-      let wind = this._p5.createVector(0, 0);
+      const wind = this._p5.createVector(0, 0);
       wind.add(this._acceleration);
       this.applyWind(wind);
       this.applyBounds();
@@ -17095,19 +17098,19 @@ var Grass = class {
     };
     this.applyWind = (wind) => {
       this._top.add(wind);
-      this._curveEnd.add(wind.mult(this._curveEndMultiplier));
+      this._curveEnd.add(wind.mult(this._forceMultiplier));
     };
     this.applyBounds = () => {
-      let distance = Math.abs(this._top.x - this._topBase.x);
-      let force = this._p5.createVector(1, 0).mult(distance / this._animationSpeed);
-      if (this._top.x > this._topBase.x) {
+      const distance = Math.abs(this._top.x - this._initialtop.x);
+      const force = this._p5.createVector(1, 0).mult(distance / this._animationDelay);
+      if (this._top.x > this._initialtop.x) {
         force.mult(-1);
       }
       this.applyForce(force);
     };
-    this.animate = (x, y) => {
-      let force = this._p5.createVector(this._defaultWindForce, 0);
-      if (this._p5.mouseX > this._top.x) {
+    this.animate = (x) => {
+      const force = this._p5.createVector(this._defaultWindForce, 0);
+      if (x > this._top.x) {
         force.mult(-1);
       }
       this.applyForce(force);
@@ -17116,93 +17119,121 @@ var Grass = class {
       this._acceleration.add(force);
     };
     this.applyDrag = () => {
-      let drag = this._acceleration.copy();
-      let speedSquared = drag.magSq();
-      let constant = -0.01;
+      const drag = this._acceleration.copy();
+      const speedSquared = drag.magSq();
+      const constant = -0.01;
       drag.normalize();
       drag.mult(constant * speedSquared);
       this.applyForce(drag);
     };
+    this.displayDebugInfo = () => {
+      this._p5.stroke("white");
+      this._p5.strokeWeight(10);
+      this._p5.point(this._bottom.x, this._bottom.y);
+      this._p5.point(this._top.x, this._top.y);
+      this._p5.stroke("red");
+      this._p5.strokeWeight(10);
+      this._p5.point(this._curveStart.x, this._curveStart.y);
+      this._p5.point(this._curveEnd.x, this._curveEnd.y);
+      this._p5.stroke("white");
+      this._p5.strokeWeight(2);
+      for (let i = 0; i < 1; i += 0.1) {
+        const x = this._p5.lerp(this._curveStart.x, this._bottom.x, i);
+        const y = this._p5.lerp(this._curveStart.y, this._bottom.y, i);
+        this._p5.point(x, y);
+      }
+      for (let i = 0; i < 1; i += 0.05) {
+        const x = this._p5.lerp(this._top.x, this._curveEnd.x, i);
+        const y = this._p5.lerp(this._top.y, this._curveEnd.y, i);
+        this._p5.point(x, y);
+      }
+    };
     this._color = color;
     this._strokeWidth = strokeWidth;
     this._p5 = p5;
-    this._maxXDelta = 200;
-    this._velocity = this._p5.createVector(0, 0);
     this._acceleration = this._p5.createVector(0, 0);
     this._bottom = bottom;
-    this._topBase = top;
-    this._top = this._topBase.copy();
-    this._curveStart = this._p5.createVector(bottom.x, bottom.y + 100);
+    this._initialtop = top;
+    this._top = this._initialtop.copy();
+    this._curveStart = this._p5.createVector(bottom.x, canvasHeight);
     this._curveEnd = this._p5.createVector(top.x, 0);
-    this._curveEndMultiplier = 5;
-    this._animationSpeed = 50;
+    this._forceMultiplier = 5;
+    this._animationDelay = 50;
     this._defaultWindForce = 10;
   }
 };
 
 // src/grassFactory.ts
 var GrassFactory = class {
-  constructor(P52, screenWidth, screenHeight) {
-    this.createShape = (x, y) => {
-      let bottom = this._p5.createVector(x, this._screenHeight);
-      let height = this.calculateHeight();
-      let top = this._p5.createVector(x, height);
-      let strokeWidth = this.calculateStrokeWidth(height);
-      let color = this.calculateColor(strokeWidth);
-      let grass = new Grass(this._p5, bottom, top, strokeWidth, color);
+  constructor(P52, drawHeight, canvasHeight) {
+    this.createShape = (x) => {
+      const bottom = this._p5.createVector(x, this._drawHeight);
+      const height = this.calculateHeight();
+      const top = this._p5.createVector(x, height);
+      const strokeWidth = this.calculateStrokeWidth(height);
+      const color = this.calculateColor();
+      const grass = new Grass(this._p5, bottom, top, strokeWidth, color, this._canvasHeight);
       return grass;
     };
     this.calculateHeight = () => {
-      let min = 25;
-      let max = 75;
-      let percentage = Math.floor(Math.random() * (max - min + 1) + min) / 100;
+      const min = 25;
+      const max = 75;
+      const percentage = Math.floor(Math.random() * (max - min + 1) + min) / 100;
       console.log("Percentage " + percentage);
-      let height = percentage * this._screenHeight;
+      const height = percentage * this._drawHeight;
       return height;
     };
     this.calculateStrokeWidth = (height) => {
-      return 0.01 * (this._screenHeight - height);
+      return 0.01 * (this._drawHeight - height);
     };
-    this.calculateColor = (strokeWidth) => {
-      let luminiscence = this.calculateLuminiscense(strokeWidth);
+    this.calculateColor = () => {
+      const luminiscence = this.calculateLuminiscense();
       return "hsb(120, 40%, " + luminiscence + ")";
     };
-    this.calculateLuminiscense = (strokeWith) => {
-      let min = 30;
-      let max = 50;
-      let percentage = Math.floor(Math.random() * (max - min + 1) + min);
+    this.calculateLuminiscense = () => {
+      const min = 30;
+      const max = 50;
+      const percentage = Math.floor(Math.random() * (max - min + 1) + min);
       return percentage + "%";
     };
     this._p5 = P52;
-    this._screenWidth = screenWidth;
-    this._screenHeight = screenHeight;
+    this._drawHeight = drawHeight;
+    this._canvasHeight = canvasHeight;
   }
 };
 
 // src/main.ts
 var sketch = (p5) => {
-  const _width = 1024;
-  const _height = 768;
-  let _shapes = new Array();
-  let _factory = new GrassFactory(p5, _width, _height);
+  const _canvasWidth = 1024;
+  const _canvasHeight = 768;
+  const _bottomMargin = 150;
+  const _debug = false;
+  const _shapes = new Array();
+  const _drawHeight = _canvasHeight - _bottomMargin;
+  const _factory = new GrassFactory(p5, _drawHeight, _canvasHeight);
   p5.setup = () => {
-    p5.createCanvas(_width, _height);
-    p5.background("hsb(220, 50%, 70%)");
+    p5.createCanvas(_canvasWidth, _canvasHeight);
   };
   p5.draw = () => {
     p5.background("hsb(220, 50%, 70%)");
+    drawBottomMargin();
     _shapes.forEach((element) => {
-      element.draw();
+      element.draw(_debug);
     });
   };
+  const drawBottomMargin = () => {
+    p5.stroke("hsb(120, 40%, 40%)");
+    p5.fill("hsb(120, 40%, 40%)");
+    p5.rect(0, _canvasHeight - _bottomMargin, _canvasWidth, _bottomMargin);
+  };
   p5.mousePressed = () => {
-    let shape = _factory.createShape(p5.mouseX, p5.mouseY);
+    const shape = _factory.createShape(p5.mouseX);
     _shapes.push(shape);
     _shapes.forEach((element) => {
-      element.animate(p5.mouseX, p5.mouseY);
+      element.animate(p5.mouseX);
     });
   };
 };
-var myp5 = new import_p5.default(sketch);
+var mySketch = new import_p5.default(sketch);
 /*! p5.js v1.4.0 June 29, 2021 */
 //# sourceMappingURL=main.js.map
