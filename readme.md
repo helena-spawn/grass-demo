@@ -23,21 +23,20 @@ The sketch starts with an overall blue canvas with a green margin at the bottom 
 ![](./doc/grass.gif)
 
 ### Slide show (stills)
-<img src="./doc/images/22.png" width="200">
-<img src="./doc/images/43.png" width="200">
-<img src="./doc/images/63.png" width="200">
-<img src="./doc/images/83.png" width="200">
-<img src="./doc/images/96.png" width="200">
-<img src="./doc/images/103.png" width="200">
-<img src="./doc/images/111.png" width="200">
-<img src="./doc/images/132.png" width="200">
-<img src="./doc/images/142.png" width="200">
-<img src="./doc/images/150.png" width="200">
-<img src="./doc/images/159.png" width="200">
-<img src="./doc/images/166.png" width="200">
-<img src="./doc/images/176.png" width="200">
-<img src="./doc/images/188.png" width="200">
-<img src="./doc/images/206.png" width="200">
+<img src="./doc/Images/22.png" width="200">
+<img src="./doc/Images/43.png" width="200">
+<img src="./doc/Images/63.png" width="200">
+<img src="./doc/Images/83.png" width="200">
+<img src="./doc/Images/96.png" width="200">
+<img src="./doc/Images/103.png" width="200">
+<img src="./doc/Images/111.png" width="200">
+<img src="./doc/Images/132.png" width="200">
+<img src="./doc/Images/142.png" width="200">
+<img src="./doc/Images/150.png" width="200">
+<img src="./doc/Images/159.png" width="200">
+<img src="./doc/Images/166.png" width="200">
+<img src="./doc/Images/188.png" width="200">
+<img src="./doc/Images/206.png" width="200">
 
 # The sketch 
 This sketch is a 'simple' canvas that responds to mouse clicks. When the mouse is clicked within the canvas it will will execute two new instructions and a movement update (drag):
