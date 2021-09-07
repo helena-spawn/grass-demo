@@ -1,24 +1,22 @@
 # Waving grass in processing (p5.js)
 
 ## Introduction
-I saw the call for contributing a page to the Processing community catalog for their 20th birthday in my twitter time line and although my contribution to the community is very limited I was working on a waving grass sketch in processing and at the same time was looking for an opportunity to increase my collaboration skills. So this seems a perfect opportunity to give something back! 
+I saw the call for contributing a page to the Processing community catalog for the 20th birthday of the Processing Foundation and although my contribution to the community is very limited I was working on a waving grass sketch in Processing and at the same time I was looking for an opportunity to increase my collaboration skills. So this seems a perfect opportunity to give something back! 
 
-My contribution has the form of a technical article on how I implemented moving bezier curves in Processing with the intention to resemble 'waving grass' in the wind. The idea started from a completely different angle though. I'm currently working with an AxiDraw Plotter and have been porting some old Processing 3 code to a java based Processing solution for a generative art project. What I really wanted to achieve was to algorithmically create trees and feed them directly into the plotter. While scouring the internet for information to help me  controlling the AxiDraw plotter I stumbled upon Daniel Shiffman's excellent and entertaining coding train tutorials on how to use Vectors to mimic real life forces by creating this so called physics engine. This engine was the perfect solution to add to my generative art coding concepts to create trees and use 'natural' forces to alter the shapes of the trees. 
+My contribution has the form of a technical article on how I implemented moving bezier curves in Processing with the intention to resemble 'waving grass' in the wind. The idea started from a completely different angle though. I'm currently working with an AxiDraw Plotter and have been porting some old Processing 3 code to a Java based Processing solution for a generative art project. What I really wanted to achieve was to algorithmically create trees and feed them directly into the plotter. While scouring the internet for information to help me  controlling the AxiDraw plotter I stumbled upon Daniel Shiffman's excellent and entertaining coding train tutorials on how to use vectors to mimic real life forces by creating this so called physics engine. This engine was the perfect solution to add to my generative art coding concepts to create trees and use 'natural' forces to alter the shapes of the trees. 
 
 ## Not trees but grass
-Ok that's the why but of course my algorithmic trees were by no means ready yet and the physics engine was a completely new setup so to start I dialed it back a little and tried to create a sketch that displays 'waving' grass. Or in other words green bezier curves that are moved by force (wind). 
+Ok that's the why but of course my algorithmic trees were by no means ready yet and the physics engine was a completely new setup for me, so to start I dialed it back a little and tried to create a sketch that displays 'waving grass'. Or in other words green bezier curves, immobile at one end, that are moved by force (wind). 
 
 ## Warning typescript
-The sketch that I will try to unfold is written using the p5.js framework using typescript and some Object Orientated implementations. For the typescript part, I personally think that it fits more with my own coding preferences and but I also hope it can serve as an example if you ever want to code sketches in typescript. I like the type safety a lot and typescript suites my style and object oriented approaches.
+The sketch that I will try to unfold is written using the p5.js framework using typescript and some object orientated implementations. For the typescript part, I personally think that it fits more with my own coding preferences but I also hope it can serve as an example if you ever want to code sketches in typescript. I like the type safety it provides a lot and it suites my style and object oriented approaches.
 
 I will not talk about how to set this up there are some excellent resources out there to help you with that and I hope my coding is clear enough to follow. 
 
-(ooh that is such a dangerous statement) 
-
-But here it goes. [Full Source code here](https://github.com/helena-spawn/grass-demo)
+I know that's a dangerous statement, but here it goes. [Full Source code here](https://github.com/helena-spawn/grass-demo)
 
 ## Waving grass
-The sketch starts with an overall blue canvas with a green margin at the bottom representing the sky and the earth. A mouse click event in the canvas creates a new grass object and displays it while a the same time a 'wind' force is applied wich makes the grass behave like it is waving in the wind. How cool is that!
+The sketch starts with an overall blue canvas with a green margin at the bottom representing the sky and the earth. A mouse click event in the canvas creates a new grass object and displays it while a the same time a 'wind' force is applied that makes the grass behave like it is waving in the wind. How cool is that!
 
 ![](./doc/grass.gif)
 
@@ -32,17 +30,17 @@ The sketch starts with an overall blue canvas with a green margin at the bottom 
 |<img src="./doc/Images/185.png" width="200">|<img src="./doc/Images/188.png" width="200">|<img src="./doc/Images/206.png" width="200">|
 
 # The sketch 
-This sketch is a 'simple' canvas that responds to mouse clicks. When the mouse is clicked within the canvas it will will execute two new instructions and a movement update (drag):
+The sketch is a canvas that responds to mouse clicks. When the mouse is clicked within the canvas it will will execute two new instructions and a movement update (drag):
 
 1.    draw a bezier curve at the clicked x coordinate from the start (bottom) to the end (top), the white dots in the image below. A control point at the bottom of the screen and a control point at the top of the screen, the red dots. Which then results in a bezier that is just a straight line.
 
-![](./doc/bezier.png)
+![](./doc/bezier-12.png)
 
 2.    apply a horizontal wind force that will move the top control point and the top of the bezier curve. Note that the top control point receive way more force than the top point of the curve itself.
 
 ![](./doc/bezier-with-force.png)
 
-3.   The force will continuously be applied with a drag and when a boundary is reached the direction of the 'wind' force will be changed to the opposite direction which will result in a horizontal 'bouncing' of the bezier control and top end point with a decreasing amplitude and the line will eventually stop moving after the force has died out because of the drag.
+3.   the force will continuously be applied with a drag and when a boundary is reached the direction of the 'wind' force will change to the opposite direction which will result in a horizontal 'bouncing' of the bezier control and end point with a decreasing amplitude and the line will eventually stop moving after the force has died out because of the drag.
 
 ![](./doc/grass-debug2.gif)
 
@@ -51,11 +49,11 @@ Note that the mouse click event will create a new grass object and also generate
 ![](./doc/grass-debug.gif)
 
 # The application setup
-For this sketch I follow a typical javascript with Node.js structure with npm as the package manager. (did I mention I use Visual Studio Code as my editor). If you clone this repository from the github link and execute: 
+For this sketch I follow a typical javascript with Node.js structure with npm as the package manager. (did I mention I use Visual Studio Code as my editor). If you clone this repository from the github link you can and execute: 
 
     npm install 
 
-you should be ready to go.
+and you should be ready to go.
 
 The folder structure looks like this.
 
@@ -75,12 +73,29 @@ To compile or transpile the code from typescript to javascript I use the command
 
     npm run -S esbuild-base -- --sourcemap
 
-Not 100% sure how that works but in the package.json there is a script statement that uses esbuild and (I think) rollup to generate a minified main.js in the out directory that is referenced in the index.html. You can just open the index.html (Visual Studio Code has this nice feature of Live Server that you can use) to see the running sketch in your browser.
+Not 100% sure how that works but in the <code>package.json</code> there is a script statement that uses <code>esbuild</code> and <code>rollup</code> to generate a minified <code>main.js</code> in the out directory that is referenced in the <code>index.html</code>. You can just open the <code>index.html</code> file (Visual Studio Code has this nice feature of Live Server that you can use) to see the running sketch in your browser.
 
 # The code
 Let's dive into the code.
 
-## Main
+## The Index.html
+The <code>index.html</code> is the starting point for the browser and contains just the bare reference to the <code>main.js</code> file that holds the p5 javascript.
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sketch</title>
+        <script src="libraries/p5.min.js"></script>
+        <script src="libraries/p5.sound.min.js"></script>
+    </head>
+    <body>
+        <script src="out/main.js"></script>
+    </body>
+    </html>
+
+## The main class
 The <code>main.ts</code> is a typical typescript setup for a p5 sketch.
 
     const sketch = (p5: P5) => 
@@ -109,7 +124,7 @@ Then conceptually I introduce two objects:
 - <b>the <code>grass</code> object</b> that will be able to draw itself and be animated 
 - and <b>the <code>grassFactory</code> object</b> that is capable of creating grass objects based on the mouse click coordinates.
 
-In the <code>main.ts</code> file I use a backing field of type <code>Array</code> to store the created grass objects and the <code>grassFactory</code> is instantiated with the some information about the drawing area and the total screen height.
+In the <code>main.ts</code> file I use a backing field of type <code>Array</code> to store the created grass objects and the <code>grassFactory</code> is instantiated with some information about the drawing area and the total screen height.
 
     import Grass from './grass';
     import GrassFactory from './grassFactory';
@@ -122,7 +137,7 @@ In the <code>main.ts</code> file I use a backing field of type <code>Array</code
     const _drawHeight = _canvasHeight - _bottomMargin;
     const _factory = new GrassFactory(p5, _drawHeight, _canvasHeight);
 
-The grass object consists of a constructor, a <code>draw</code> and an <code>animate</code> function. The draw function is used in the p5 draw loop and the animate function is used in the p5 <code>mousePressed</code> function implementation to animate the grass object or apply wind force if you will.
+The <code>grass</code> object consists of a <code>constructor</code>, a <code>draw</code> and an <code>animate</code> function. The draw function is used in the p5 draw loop and the animate function is used in the p5 <code>mousePressed</code> function implementation to animate the grass object or apply the wind force if you will.
     
     p5.draw = () => 
     {
@@ -133,7 +148,7 @@ The grass object consists of a constructor, a <code>draw</code> and an <code>ani
         });
     };
 
-The <code>mousePressed</code> function is used to add a new <code>grass</code> object based on where the mouse click is located and also calls the animate function on all the existing grass objects to apply the 'wind' force.
+The <code>mousePressed</code> function is used to add a new <code>grass</code> object based on where the mouse click is located and also calls the <code>animate</code> function on all the existing grass objects to apply the 'wind' force.
 
     p5.mousePressed = () =>
     {
@@ -155,7 +170,7 @@ The <code>grassFactory</code> is a simple factory class that is constructed with
         this._canvasHeight = canvasHeight;
     }
 
-And implements the function <code>createShape</code> that takes the mouse x coordinate as an input parameter. This x coordinate is used to determine where the grass object should be place (horzontally that is) on the canvas. A random height, stroke width and color is chosen. The grass object is created and returned to the caller.
+And implements the function <code>createShape</code> that takes the mouse <code>x</code> coordinate as an input parameter. This <code>x</code> coordinate is used to determine where the grass object should be placed (horzontally that is) on the canvas. A random height, stroke width and color is chosen. The grass object is created and then returned to the caller.
 
     createShape = (x: number): Grass  =>
     {
@@ -171,12 +186,12 @@ And implements the function <code>createShape</code> that takes the mouse x coor
 ## The grass object
 The <code>grass</code> object is constructed with a couple of parameters.
 - a reference to the p5 module to get access to vectors and shapes and all the Processing components.
-- a bottom x and y in the form of a vector. 
-- the top x and y also in the form of a vector.
+- a bottom <code>x</code> and <code>y</code> in the form of a vector. 
+- the top <code>x</code> and <code>y</code> also in the form of a vector.
 - a stroke width (which is determined in the grass factory)
 - a color for the curve (also provided by the grass factory).
 - and finally the screen height to position to bottom control point. 
-- note you do not need a notion of the top of the canvas because we assume this is where y is 0. And of course you can solve/implement this in any other way.
+- note you do not need a notion of the top of the canvas because we assume this is where <code>y=0</code>. Of course you can solve/implement this in any other way.
 
 Once a <code>grass</code> object is created by the <code>grassFactory</code> the object is stored in the <code>_shapes</code> backing field and updated in the processing draw loop.
 
@@ -196,9 +211,9 @@ Once a <code>grass</code> object is created by the <code>grassFactory</code> the
         this._defaultWindForce = 10;
     }
 
-The constructor also sets some base values
-- a default acceleration vector of 0
-- a reference of the top coordinates in the variable _initialTop. I use this value to remember the initial state of the grass before wind force is applied
+The <code>constructor</code> also sets some base values
+- a default acceleration vector of (0, 0)
+- a reference of the top coordinates in the variable <code>_initialTop</code>. I use this value to remember the initial state of the grass before wind force is applied
 - a new vector top (a copy of the incoming variable) to draw and apply force to
 - a curve start control point
 - a curve end control point
@@ -207,7 +222,7 @@ The constructor also sets some base values
 - a default windforce that is applied at the initial mouse click
 
 The grass's draw function is split into two functions: <code>display</code> and <code>update</code>.
-Display is responsible for drawing the bezier curve based on the start, end and the two control points.
+<code>Display</code> is responsible for drawing the bezier curve based on the start, end and the two control points.
 
     display = (debug: boolean): void => 
     {
@@ -226,10 +241,10 @@ Display is responsible for drawing the bezier curve based on the start, end and 
             this._curveEnd.y);
     };
 
-The update function is the function that applies the force and drag on both the top point of the curve and the corresponding <code>curveEnd</code> control point. This is a loose implementation of Daniel Shiffman's physics engine. 
-- Apply the current acceleration to the top point and the top control point. 
-- If points exceed their boundaries invers the force to move the point in the other direction.
-- Apply the drag to the acceleration.
+<code>Update</code> is the function that applies the force and drag on both the top point of the curve and the corresponding <code>curveEnd</code> control point. This is a loose implementation of Daniel Shiffman's physics engine. 
+- apply the current acceleration to the top point and the top control point
+- if points exceed their boundaries invers the force to move the point in the other direction
+- apply the drag to the acceleration
 
 The implementation looks something like this.
 
@@ -269,7 +284,7 @@ The <code>applyBounds</code> function reverses the force and bounces the points 
 
 This is actually a bit of a messy implementation (and should be refactored/redesigned) but it seems to work for now.
 
-The <code>applyDrag</code> function slows the curve movements and because of this the bezier curve moves (sort of) back into it's original state. This function's main purpose is to slow down the acceleration.
+The <code>applyDrag</code> function slows the curve movements and because of this the curve moves (sort of) back into it's original state. The function's main purpose is to slow down the acceleration.
 
     applyDrag = ():void =>
     {
