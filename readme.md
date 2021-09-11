@@ -170,7 +170,7 @@ The `grassFactory` is a simple factory class that is constructed with some canva
         this._canvasHeight = canvasHeight;
     }
 
-And implements the function `createShape` that takes the mouse `x` coordinate as an input parameter. This `x` coordinate is used to determine where the grass object should be placed (horzontally that is) on the canvas. A random height, stroke width and color is chosen. The grass object is created and then returned to the caller.
+And implements the function `createShape` that takes the mouse `x` coordinate as an input parameter. This `x` coordinate is used to determine where the grass object should be placed (horizontally that is) on the canvas. A random height, stroke width and color is chosen. The grass object is created and then returned to the caller.
 
     createShape = (x: number): Grass  =>
     {
