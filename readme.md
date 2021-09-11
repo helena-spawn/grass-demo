@@ -73,13 +73,13 @@ To compile or transpile the code from typescript to javascript I use the command
 
     npm run -S esbuild-base -- --sourcemap
 
-Not 100% sure how that works but in the <code>package.json</code> there is a script statement that uses <code>esbuild</code> and <code>rollup</code> to generate a minified <code>main.js</code> in the out directory that is referenced in the <code>index.html</code>. You can just open the <code>index.html</code> file (Visual Studio Code has this nice feature of Live Server that you can use) to see the running sketch in your browser.
+Not 100% sure how that works but in the `package.json` there is a script statement that uses `esbuild` and `rollup` to generate a minified `main.js` in the out directory that is referenced in the `index.html`. You can just open the `index.html` file (Visual Studio Code has this nice feature of Live Server that you can use) to see the running sketch in your browser.
 
 # The code
 Let's dive into the code.
 
 ## The Index.html
-The <code>index.html</code> is the starting point for the browser and contains just the bare reference to the <code>main.js</code> file that holds the p5 javascript.
+The `index.html` is the starting point for the browser and contains just the bare reference to the `main.js` file that holds the p5 javascript.
 
     <!DOCTYPE html>
     <html lang="en">
@@ -96,7 +96,7 @@ The <code>index.html</code> is the starting point for the browser and contains j
     </html>
 
 ## The main class
-The <code>main.ts</code> is a typical typescript setup for a p5 sketch.
+The `main.ts` is a typical typescript setup for a p5 sketch.
 
     const sketch = (p5: P5) => 
     {
@@ -121,10 +121,10 @@ The <code>main.ts</code> is a typical typescript setup for a p5 sketch.
 Setting up some screen dimension variables and the implementation of Processing's setup and draw functions.
 
 Then conceptually I introduce two objects: 
-- <b>the <code>grass</code> object</b> that will be able to draw itself and be animated 
-- and <b>the <code>grassFactory</code> object</b> that is capable of creating grass objects based on the mouse click coordinates.
+- <b>the `grass` object</b> that will be able to draw itself and be animated 
+- and <b>the `grassFactory` object</b> that is capable of creating grass objects based on the mouse click coordinates.
 
-In the <code>main.ts</code> file I use a backing field of type <code>Array</code> to store the created grass objects and the <code>grassFactory</code> is instantiated with some information about the drawing area and the total screen height.
+In the `main.ts` file I use a backing field of type `Array` to store the created grass objects and the `grassFactory` is instantiated with some information about the drawing area and the total screen height.
 
     import Grass from './grass';
     import GrassFactory from './grassFactory';
@@ -137,7 +137,7 @@ In the <code>main.ts</code> file I use a backing field of type <code>Array</code
     const _drawHeight = _canvasHeight - _bottomMargin;
     const _factory = new GrassFactory(p5, _drawHeight, _canvasHeight);
 
-The <code>grass</code> object consists of a <code>constructor</code>, a <code>draw</code> and an <code>animate</code> function. The draw function is used in the p5 draw loop and the animate function is used in the p5 <code>mousePressed</code> function implementation to animate the grass object or apply the wind force if you will.
+The `grass` object consists of a `constructor`, a `draw` and an `animate` function. The draw function is used in the p5 draw loop and the animate function is used in the p5 `mousePressed` function implementation to animate the grass object or apply the wind force if you will.
     
     p5.draw = () => 
     {
@@ -148,7 +148,7 @@ The <code>grass</code> object consists of a <code>constructor</code>, a <code>dr
         });
     };
 
-The <code>mousePressed</code> function is used to add a new <code>grass</code> object based on where the mouse click is located and also calls the <code>animate</code> function on all the existing grass objects to apply the 'wind' force.
+The `mousePressed` function is used to add a new `grass` object based on where the mouse click is located and also calls the `animate` function on all the existing grass objects to apply the 'wind' force.
 
     p5.mousePressed = () =>
     {
@@ -161,7 +161,7 @@ The <code>mousePressed</code> function is used to add a new <code>grass</code> o
     };
 
 ## The grassFactory object
-The <code>grassFactory</code> is a simple factory class that is constructed with some canvas dimension information that is used to determine the size of the grass object.
+The `grassFactory` is a simple factory class that is constructed with some canvas dimension information that is used to determine the size of the grass object.
 
     constructor(P5: p5, drawHeight: number, canvasHeight: number)
     {
@@ -170,7 +170,7 @@ The <code>grassFactory</code> is a simple factory class that is constructed with
         this._canvasHeight = canvasHeight;
     }
 
-And implements the function <code>createShape</code> that takes the mouse <code>x</code> coordinate as an input parameter. This <code>x</code> coordinate is used to determine where the grass object should be placed (horzontally that is) on the canvas. A random height, stroke width and color is chosen. The grass object is created and then returned to the caller.
+And implements the function `createShape` that takes the mouse `x` coordinate as an input parameter. This `x` coordinate is used to determine where the grass object should be placed (horzontally that is) on the canvas. A random height, stroke width and color is chosen. The grass object is created and then returned to the caller.
 
     createShape = (x: number): Grass  =>
     {
@@ -184,16 +184,16 @@ And implements the function <code>createShape</code> that takes the mouse <code>
     };
 
 ## The grass object
-The <code>grass</code> object is constructed with a couple of parameters.
+The `grass` object is constructed with a couple of parameters.
 - a reference to the p5 module to get access to vectors and shapes and all the Processing components.
-- a bottom <code>x</code> and <code>y</code> in the form of a vector. 
-- the top <code>x</code> and <code>y</code> also in the form of a vector.
+- a bottom `x` and `y` in the form of a vector. 
+- the top `x` and `y` also in the form of a vector.
 - a stroke width (which is determined in the grass factory)
 - a color for the curve (also provided by the grass factory).
 - and finally the screen height to position to bottom control point. 
-- note you do not need a notion of the top of the canvas because we assume this is where <code>y=0</code>. Of course you can solve/implement this in any other way.
+- note you do not need a notion of the top of the canvas because we assume this is where `y=0`. Of course you can solve/implement this in any other way.
 
-Once a <code>grass</code> object is created by the <code>grassFactory</code> the object is stored in the <code>_shapes</code> backing field and updated in the processing draw loop.
+Once a `grass` object is created by the `grassFactory` the object is stored in the `_shapes` backing field and updated in the processing draw loop.
 
     constructor(p5: p5, bottom: p5.Vector, top: p5.Vector, strokeWidth: number, color: string, canvasHeight: number)
     {
@@ -211,9 +211,9 @@ Once a <code>grass</code> object is created by the <code>grassFactory</code> the
         this._defaultWindForce = 10;
     }
 
-The <code>constructor</code> also sets some base values
+The `constructor` also sets some base values
 - a default acceleration vector of (0, 0)
-- a reference of the top coordinates in the variable <code>_initialTop</code>. I use this value to remember the initial state of the grass before wind force is applied
+- a reference of the top coordinates in the variable `_initialTop`. I use this value to remember the initial state of the grass before wind force is applied
 - a new vector top (a copy of the incoming variable) to draw and apply force to
 - a curve start control point
 - a curve end control point
@@ -221,8 +221,8 @@ The <code>constructor</code> also sets some base values
 - an animation delay value to control the speed of the 'wave' of the grass
 - a default windforce that is applied at the initial mouse click
 
-The grass's draw function is split into two functions: <code>display</code> and <code>update</code>.
-<code>Display</code> is responsible for drawing the bezier curve based on the start, end and the two control points.
+The grass's draw function is split into two functions: `display` and `update`.
+`Display` is responsible for drawing the bezier curve based on the start, end and the two control points.
 
     display = (debug: boolean): void => 
     {
@@ -241,7 +241,7 @@ The grass's draw function is split into two functions: <code>display</code> and 
             this._curveEnd.y);
     };
 
-<code>Update</code> is the function that applies the force and drag on both the top point of the curve and the corresponding <code>curveEnd</code> control point. This is a loose implementation of Daniel Shiffman's physics engine. 
+`Update` is the function that applies the force and drag on both the top point of the curve and the corresponding `curveEnd` control point. This is a loose implementation of Daniel Shiffman's physics engine. 
 - apply the current acceleration to the top point and the top control point
 - if points exceed their boundaries invers the force to move the point in the other direction
 - apply the drag to the acceleration
@@ -258,7 +258,7 @@ The implementation looks something like this.
         this.applyDrag();
     };
 
-The <code>applyWind</code> function applies the so called wind force on the top part of the grass curve.
+The `applyWind` function applies the so called wind force on the top part of the grass curve.
 
     applyWind = (wind:p5.Vector): void =>
     {
@@ -266,9 +266,9 @@ The <code>applyWind</code> function applies the so called wind force on the top 
         this._curveEnd.add(wind.mult(this._curveEndMultiplier));
     };
 
-Here I multiply the force on the <code>curveEnd</code> control point to create a circular movement.
+Here I multiply the force on the `curveEnd` control point to create a circular movement.
 
-The <code>applyBounds</code> function reverses the force and bounces the points back and forth.
+The `applyBounds` function reverses the force and bounces the points back and forth.
 
     applyBounds = (): void =>
     {
@@ -284,7 +284,7 @@ The <code>applyBounds</code> function reverses the force and bounces the points 
 
 This is actually a bit of a messy implementation (and should be refactored/redesigned) but it seems to work for now.
 
-The <code>applyDrag</code> function slows the curve movements and because of this the curve moves (sort of) back into it's original state. The function's main purpose is to slow down the acceleration.
+The `applyDrag` function slows the curve movements and because of this the curve moves (sort of) back into it's original state. The function's main purpose is to slow down the acceleration.
 
     applyDrag = ():void =>
     {
@@ -296,14 +296,14 @@ The <code>applyDrag</code> function slows the curve movements and because of thi
         this.applyForce(drag);
     };
 
-And finally the <code>applyForce</code> function updates the acceleration itself.
+And finally the `applyForce` function updates the acceleration itself.
 
     applyForce = (force:p5.Vector): void =>
     {
         this._acceleration.add(force);
     };
 
-The <code>grass</code> object implements an <code>animate</code> function that applies the initial default wind force and is called in the <code>mousePressed</code> function in the <code>main.ts</code> class we saw earlier.
+The `grass` object implements an `animate` function that applies the initial default wind force and is called in the `mousePressed` function in the `main.ts` class we saw earlier.
 
     animate = (x: number): void =>
     {
